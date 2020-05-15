@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AdventureScript : MonoBehaviour
 {
     public Vector3 mousePos;
-
     public Camera mainCamera;
-
     public Vector3 mousePosWorld;
-    
     public Vector2 mousePosWorld2D;
-    
     public RaycastHit2D hit;
+    public GameObject player;
 
     void Start()
     {
@@ -21,21 +16,27 @@ public class AdventureScript : MonoBehaviour
 
     void Update()
     {
-        if ( Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButtonDown(0))
         {
-            mousePos = Input.mousePosition;
-            mousePosWorld = mainCamera.ScreenToWorldPoint(mousePos);
-            mousePosWorld2D = new Vector2(mousePosWorld.x, mousePosWorld.y);
-            hit = Physics2D.Raycast(mousePosWorld2D, Vector2.zero);
+            return;
+        }
 
-            if (hit.collider != null)
+        mousePos = Input.mousePosition;
+        mousePosWorld = mainCamera.ScreenToWorldPoint(mousePos);
+        mousePosWorld2D = new Vector2(mousePosWorld.x, mousePosWorld.y);
+        hit = Physics2D.Raycast(mousePosWorld2D, Vector2.zero);
+
+        if (hit.collider)
+        {
+            print("Tag: " + hit.collider.gameObject.tag);
+            if (hit.collider.gameObject.CompareTag("Ground"))
             {
-                print("Name: " + hit.collider.gameObject.name);
+                player.transform.position = hit.point;
             }
-            else
-            {
-                print("Kein Collider");
-            }
+        }
+        else
+        {
+            print("Kein Collider");
         }
     }
 }
